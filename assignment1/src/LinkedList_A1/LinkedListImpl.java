@@ -3,7 +3,7 @@
  *See inline comment descriptions for methods not described in interface.
  *
  */
-package assignment1;
+package LinkedList_A1;
 
 public class LinkedListImpl implements LIST_Interface {
 	Node headCell; //this will be the entry point to your linked list (the head)

@@ -5,7 +5,7 @@
  * it is in your build path and the jar is in your project.
 */
 
-package assignment1;
+package LinkedList_A1;
 import gradingTools.comp410s20.assignment1.testcases.Assignment1Suite;
 
 public class RunTests {

@@ -1,4 +1,4 @@
-package assignment1;
+package LinkedList_A1;
 
 public class LinkedListPlayground {
 
