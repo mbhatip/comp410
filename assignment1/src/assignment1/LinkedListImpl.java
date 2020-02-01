@@ -101,9 +101,9 @@ public class LinkedListImpl implements LIST_Interface {
 			return true;
 		}
 		
-		// Otherwise we can start by comparing an element
-		// and the previous one to insortThis, increment
-		// until condition is not met, or a place has been found
+		// Otherwise we can start by comparing an element (upperBound)
+		// and the previous one (lowerBound) to insortThis, increment
+		// until condition is not met, AKA a place has been found
 		Node upperBound = getNodeAt(1);
 		Node lowerBound = upperBound.prev;
 		while(lowerBound.data > insortThis.data || 
