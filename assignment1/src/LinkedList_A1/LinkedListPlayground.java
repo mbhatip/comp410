@@ -80,6 +80,34 @@ public class LinkedListPlayground {
 		  passTest(L.getRoot().data == 4);
 		  passTest(L.getLast().data == 4);
 		  
+		  L.clear();
+		  passTest(L.insort(4));
+		  passTest(L.insort(5));
+		  passTest(L.insort(6));
+		  passTest(L.insort(5.5));
+		  passTest(L.insort(5));
+		  // List should be 4 5 5 5.5 6
+		  printList(L);
+		  passTest(L.size() == 5);
+		  
+		  passTest(L.remove(4));
+		  passTest(L.remove(0));
+		  // List should be 5 5 5.5
+		  printList(L);
+		  passTest(L.size() == 3);
+		  
+		  L.clear();
+		  passTest(!L.insert(3, 1));
+		  passTest(L.insert(2, 0));
+		  passTest(L.insert(3, 1));
+		  passTest(L.insert(4, 2));
+		  // List: 2 3 4
+		  printList(L);
+		  passTest(L.size() == 3);
+		  
+		  
+		  
+		  
 	  }
 	  private static void passTest(boolean b) {
 		  String msg;
