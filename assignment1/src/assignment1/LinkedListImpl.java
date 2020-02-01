@@ -36,7 +36,7 @@ public class LinkedListImpl implements LIST_Interface {
 		Node insertThis = new Node(elt);
 		
 		// Checking to see if adding to empty list
-		if (addToEmptyList(insertThis)) {
+		if (addToEmptyList(insertThis, index)) {
 			return true;
 		}
 		
@@ -87,7 +87,7 @@ public class LinkedListImpl implements LIST_Interface {
 		Node insortThis = new Node(elt);
 				
 		// Checking to see if adding to empty list
-		if (addToEmptyList(insortThis)) {
+		if (addToEmptyList(insortThis, 0)) {
 			return true;
 		}
 		
@@ -96,7 +96,7 @@ public class LinkedListImpl implements LIST_Interface {
 			this.insert(elt, 0);
 			return true;
 		}
-		else if (insortThis.data > this.getLast().data) {
+		else if (insortThis.data >= this.getLast().data) {
 			this.insert(elt, this.size());
 			return true;
 		}
@@ -108,23 +108,13 @@ public class LinkedListImpl implements LIST_Interface {
 		Node lowerBound = upperBound.prev;
 		while(lowerBound.data > insortThis.data || 
 				upperBound.data <= insortThis.data) {
-			upperBound = upperBound.next;
 			lowerBound = upperBound;
+			upperBound = upperBound.next;
 		}
 		lowerBound.next = insortThis;
 		insortThis.prev = lowerBound;
 		insortThis.next = upperBound;
 		upperBound.prev = insortThis;
-		
-		
-		// Checking if node is new headCell or lastCell
-		if (insortThis.data < upperBound.data) {
-			this.insert(elt, 0);
-		}
-		
-		for(int i = 1; i < size(); i++) {
-			
-		}
 		
 		// Changing size value
 		numElts++;
@@ -143,7 +133,7 @@ public class LinkedListImpl implements LIST_Interface {
 		}
 		
 		// Checking if only one cell left (clear list)
-		else if (size() == 1) {
+		else if (this.size() == 1) {
 			clear();
 			return true;
 		}
@@ -226,12 +216,16 @@ public class LinkedListImpl implements LIST_Interface {
 		
 	}
 	
-	private boolean addToEmptyList(Node element) {
-		if (!this.isEmpty()) {
+	// Function adds to an empty list and redeclares headcell
+	// and lastcell only if the list is empty and the given 
+	// index is 0
+	private boolean addToEmptyList(Node element, int index) {
+		if (!this.isEmpty() || index != 0) {
 			return false;
 		}
 		this.headCell = element;
 		this.lastCell = element;
+		this.numElts++;
 		return true;
 	}
 }
