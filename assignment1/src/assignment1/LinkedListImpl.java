@@ -107,7 +107,7 @@ public class LinkedListImpl implements LIST_Interface {
 		Node upperBound = getNodeAt(1);
 		Node lowerBound = upperBound.prev;
 		while(lowerBound.data > insortThis.data || 
-				upperBound.data < insortThis.data) {
+				upperBound.data <= insortThis.data) {
 			upperBound = upperBound.next;
 			lowerBound = upperBound;
 		}
