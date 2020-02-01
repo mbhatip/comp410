@@ -8,9 +8,9 @@ public class LinkedListPlayground {
 	     correctness. We've graciously also provided you a bit of extra test data for debugging.
 	     It doesn't matter what you have in here. We will not grade it. This is for your use in testing your implementation.
 	      */
-	    test1();
-	    test2();
-
+	    //test1();
+	    //test2();
+	    test3();
 	  }
 	  
 	  public static void test1(){
@@ -54,6 +54,38 @@ public class LinkedListPlayground {
 	    L.remove(0);
 	    System.out.println(L.size());
 	    printList(L);
+	  }
+	  
+	  public static void test3() {
+		  LinkedListImpl L = new LinkedListImpl();
+		  passTest(L.isEmpty());
+		  passTest(Double.isNaN(L.get(0)));
+		  passTest(L.remove(0) == false);
+		  passTest(L.size() == 0);
+		  passTest(L.insort(5));
+		  passTest(L.size()==1);
+		  passTest(L.insert(4, 1));
+		  // List is now 5 --> 4
+		  printList(L);
+		  
+		  L.clear();
+		  passTest(L.getRoot() == null);
+		  passTest(!L.insert(5, 2));
+		  passTest(L.insert(4, 0));
+		  passTest(L.getRoot().data == 4);
+		  passTest(L.getLast().data == 4);
+		  
+		  L.clear();
+		  passTest(L.insort(4));
+		  passTest(L.getRoot().data == 4);
+		  passTest(L.getLast().data == 4);
+		  
+	  }
+	  private static void passTest(boolean b) {
+		  String msg;
+		  if (b) {msg = "pass";}
+		  else { msg="fail"; }
+		  System.out.println(msg);
 	  }
 	  
 	  public static void printList(LinkedListImpl L){ 
