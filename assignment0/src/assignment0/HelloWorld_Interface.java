@@ -1,4 +1,4 @@
-package Assignment0;
+package assignment0;
 /**
  * COMP 410
  *

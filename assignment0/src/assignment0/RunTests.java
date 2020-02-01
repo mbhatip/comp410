@@ -1,4 +1,4 @@
-package Assignment0;
+package assignment0;
 import gradingTools.comp410s20.assignment0.testcases.Assignment0Suite;
 
 public class RunTests {

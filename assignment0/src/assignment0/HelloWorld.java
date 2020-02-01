@@ -1,4 +1,4 @@
-package Assignment0;
+package assignment0;
 
 public class HelloWorld implements HelloWorld_Interface {
 
