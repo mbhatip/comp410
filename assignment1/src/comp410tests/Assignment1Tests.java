@@ -62,24 +62,24 @@ public class Assignment1Tests {
 		L.insort(14);
 		compareListToArray( L, new double[] { 8, 14, 10, 14, 17, 20 } );
 		
-		assertEquals( false, L.remove( 40 ) );
+		assertFalse( L.remove( 40 ) );
 		compareListToArray( L, new double[] { 8, 14, 10, 14, 17, 20 } );
-		assertEquals( true, L.remove(0) );
+		assertTrue( L.remove(0) );
 		compareListToArray( L, new double[] { 14, 10, 14, 17, 20 } );
-		assertEquals( true, L.remove(1) );
+		assertTrue( L.remove(1) );
 		compareListToArray( L, new double[] { 14, 14, 17, 20 } );
-		assertEquals( true, L.remove(0) );
+		assertTrue( L.remove(0) );
 		compareListToArray( L, new double[] { 14, 17, 20 } );
-		assertEquals( true, L.remove(2) );
+		assertTrue( L.remove(2) );
 		compareListToArray( L, new double[] { 14, 17 } );
-		assertEquals( true, L.remove(1) );
+		assertTrue( L.remove(1) );
 		compareListToArray( L, new double[] { 14 } );
-		assertEquals( true, L.remove(0) );
+		assertTrue( L.remove(0) );
 		compareListToArray( L, new double[] {} );
 		
-		assertEquals( false, L.remove(0) );
+		assertFalse( L.remove(0) );
 		compareListToArray( L, new double[] {} );
-		assertEquals( false, L.remove(1) );
+		assertFalse( L.remove(1) );
 		compareListToArray( L, new double[] {} );
 		
 		assertEquals( 0, L.size() );
@@ -107,11 +107,11 @@ public class Assignment1Tests {
 	public void stupidIndexTest() {
 		LIST_Interface L = new LinkedListImpl();
 		
-		assertEquals( false, L.insert( 10,  3 ) );
+		assertFalse(L.insert( 10,  3 ) );
 		compareListToArray( L, new double[] { } );
-		assertEquals( false, L.insert( 10,  2 ) );
+		assertFalse( L.insert( 10,  2 ) );
 		compareListToArray( L, new double[] { } );
-		assertEquals( false, L.insert( 10,  1 ) );
+		assertFalse( L.insert( 10,  1 ) );
 		compareListToArray( L, new double[] { } );
 		
 		// make a list
@@ -124,12 +124,12 @@ public class Assignment1Tests {
 		compareListToArray( L, new double[] { 1, 2, 3 } );
 		
 		// then do stupid stuff
-		assertEquals( false, L.insert( 4,  4 ) );
+		assertFalse( L.insert( 4,  4 ) );
 		compareListToArray( L, new double[] { 1, 2, 3 } );
-		assertEquals( false, L.insert( 4,  5 ) );
+		assertFalse( L.insert( 4,  5 ) );
 		compareListToArray( L, new double[] { 1, 2, 3 } );
 		
-		assertEquals( true, L.insert( 4,  3 ) );
+		assertTrue( L.insert( 4,  3 ) );
 		
 		compareListToArray( L, new double[] { 1, 2, 3, 4 } );
 		
