@@ -4,11 +4,13 @@ public class BST_Node {
   String data;
   BST_Node left;
   BST_Node right;
+  BST_Node parent;
   
   BST_Node(String data){ 
 	  this.data=data;
 	  this.left = null;
 	  this.right = null;
+	  this.parent = null;
   }
 
   // --- used for testing  ----------------------------------------------
@@ -24,6 +26,8 @@ public class BST_Node {
   // --------------------------------------------------------------------
   // you may add any other methods you want to get the job done
   // --------------------------------------------------------------------
+  
+  public BST_Node getParent() { return parent;}
   
   public String toString(){
     return "Data: "+this.data+", Left: "+((this.left!=null)?left.data:"null")

@@ -3,6 +3,7 @@ package BST_A2;
 public class BST implements BST_Interface {
   public BST_Node root;
   int size;
+  static boolean REMOVE_USING_MIN = false;
   
   public BST(){ size=0; root=null; }
   
@@ -20,6 +21,10 @@ public class BST implements BST_Interface {
   
 	@Override
 	public boolean insert(String s) {
+		if (contains(s)) {
+			return false;
+		}
+		
 		BST_Node insertThis = new BST_Node(s);
 		if (empty()) {
 			root  = insertThis;
@@ -31,9 +36,7 @@ public class BST implements BST_Interface {
 		
 		while (true) {
 			String parentData = parent.getData();
-			if (parentData.equals(s)) {
-				return false;
-			}
+			
 			if (parentData.compareTo(s) > 0) {
 				if (parent.left == null) {
 					parent.left = insertThis;
@@ -49,6 +52,7 @@ public class BST implements BST_Interface {
 				parent = parent.right;
 			}
 		}
+		insertThis.parent = parent;
 		size++;
 		return true;
 	}
@@ -56,29 +60,76 @@ public class BST implements BST_Interface {
 	@Override
 	public boolean remove(String s) {
 		BST_Node removeThis = findNode(s, root);
+		
 		if (removeThis == null) {
 			return false;
 		}
-		BST_Node left = ;
-		boolean hasRight = removeThis.left != null;
-		if (hasLeft && !hasRight) {
-			removeThis.data = removeThis.left.getData();
-			removeThis = removeThis.left;
+
+		BST_Node parent = removeThis.parent;
+		BST_Node left = removeThis.left;
+		BST_Node right = removeThis.right;
+		
+		boolean isRoot = parent == null;
+		boolean isLeftChild = !isRoot && parent.left != null && parent.left.equals(removeThis);
+		
+		
+		if (left == null && right != null) {
+			if (isRoot) {
+				root = right;
+				root.parent = null;
+			}
+			else if(isLeftChild) {
+				parent.left = right;
+			}
+			else {
+				parent.right = right;
+			}
+			right.parent = parent;
 		}
-		else if (!hasLeft && hasRight) {
-			removeThis.data = removeThis.right.getData();
-			removeThis = removeThis.right;
+		else if (left != null && right == null) {
+			if (isRoot) {
+				root = left;
+				root.parent = null;
+			}
+			else if (isLeftChild) {
+				parent.left = left;
+			}
+			else {
+				parent.right = left;
+			}
+			left.parent = parent;
 		}
-		else if (hasLeft && hasRight) {
+		else if (left != null && right != null) {
+			String newData = REMOVE_USING_MIN ? findMinNode(right).getData()
+					: findMaxNode(left).getData();
+			remove(newData);
+			if (isRoot) {
+				root.data = newData;
+			}
+			removeThis.data = newData;
+			return true;
+		}
+		else {
+			if (isRoot) {
+				root = null;
+			}
 			
+			else if(isLeftChild) {
+				parent.left = null;
+			}
+			else {
+				parent.right = null;
+			}
 		}
 		removeThis = null;
+		size--;
 		return true;
 	}
 	
 	@Override
 	public String findMin() {
-		return findMinNode(root).getData();
+		BST_Node min = findMinNode(root);
+		return min == null ? null : min.getData();
 	}
 	
 	private BST_Node findMinNode(BST_Node parent) {
@@ -93,7 +144,8 @@ public class BST implements BST_Interface {
 	
 	@Override
 	public String findMax() {
-		return findMaxNode(root).getData();
+		BST_Node max = findMaxNode(root);
+		return max == null ? null : max.getData();
 	}
 	
 	private BST_Node findMaxNode(BST_Node parent) {

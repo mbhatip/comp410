@@ -1,5 +1,14 @@
 package BST_A2;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class BST_Playground {
 /*
@@ -29,21 +38,33 @@ public class BST_Playground {
    // you may wish to print not only the node value, and indicators of what
    // nodes are the left and right subtree roots,
    // but also which node is the parent of the current node
+	  
+	  
 	  Scanner scan = new Scanner(System.in);
-	  int input = 1;
-	  while (input != 0) {
-		  input = scan.nextInt();
-		  BST tree = new BST();
+	  String input = null;
+	  while (input != "Q") {
+		  int numNodes = 200;
+		  int strLength = 1;
 		  
-		  int max = 10;
-		  String[] randString = new String[max];
+		  BST tree = new BST();
+		  List<String> listStrings = new ArrayList<String>();
 		  
 		  System.out.print("Input: ");
+		  for (int i = 0; i < numNodes; i++) {
+			  String s = MyRandom.nextString(strLength, strLength);
+			  listStrings.add(s);
+			  tree.insert(s);
+			  System.out.print(s);
+		  }
+		  System.out.print("\nNo duplicates: ");
+		  Set<String> setStrings = new HashSet<String>();
+		  setStrings.addAll(listStrings);
 		  
-		  for (int i = 0; i < 10; i++) {
-			  randString[i] = MyRandom.nextString(1,1);
-			  System.out.print(randString[i]);
-			  tree.insert(randString[i]);
+		  for (String s : listStrings) {
+			  if (setStrings.contains(s)) {
+				  System.out.print(s + ',');
+			  }
+			  while(setStrings.remove(s)) {}
 		  }
 		  System.out.println();
 		  /*
@@ -55,15 +76,8 @@ public class BST_Playground {
 		  tree.insert("9");
 		  */
 		  printLevelOrder(tree);
-		  System.out.println(
-				  "\nHeight: " + tree.height() + 
-				  "\nSize: " + tree.size() +
-				  "\nRoot: " + tree.getRoot().getData() + 
-				  "\nEmpty: " + tree.empty() +
-				  "\nMinimum: " + tree.findMin() + 
-				  "\nMaximum: " + tree.findMax()); 
 		  
-		  for (String s : randString) {
+		  for (String s : listStrings) {
 			  if (!tree.contains(s)) {
 				  System.out.println("Failure: " + s);
 			  }
@@ -74,6 +88,30 @@ public class BST_Playground {
 				  System.out.println("Failure: " + s);
 			  }
 		  }
+		  /*
+		  while (input != "E") {
+			  System.out.print("Remove: ");
+			  input = scan.next();
+			  if(tree.remove(input)) {
+				  System.out.println(input + " was deleted");
+				  printLevelOrder(tree);
+			  }
+		  }
+		  */
+		  // Randomly delete variables and post results
+		  Collections.shuffle(listStrings);
+		  
+		  for (String s : listStrings) {
+			  if (tree.remove(s)) {
+				  System.out.println("***********\n" + s + " was deleted");
+				  printLevelOrder(tree);
+			  }
+		  }
+		  if(tree.remove("a") || tree.contains("a")) {
+			  System.out.println("\nFAILED\n");
+		  }
+		  input = scan.next();
+		  
 	}
   }
   
@@ -85,6 +123,20 @@ public class BST_Playground {
       printGivenLevel(tree.getRoot(), i);
       System.out.println();
     }
+	
+    
+    
+    String root = tree.getRoot() != null ? tree.getRoot().getData() : "null";
+    String min = tree.findMin() != null ? tree.findMin() : "null";
+    String max = tree.findMax() != null ? tree.findMax() : "null";
+	
+    System.out.println(
+			  "Height: " + tree.height() + 
+			  "\nSize: " + tree.size() +
+			  "\nRoot: " + root + 
+			  "\nEmpty: " + tree.empty() +
+			  "\nMinimum: " + min + 
+			  "\nMaximum: " + max); 
     
   }
   static void printGivenLevel(BST_Node root,int level){
