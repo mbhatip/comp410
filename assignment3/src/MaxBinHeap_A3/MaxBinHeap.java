@@ -24,8 +24,26 @@ public class MaxBinHeap implements Heap_Interface {
 	@Override
 	public void insert(double element) {
 		// TODO Auto-generated method stub
-		bubbleDown(element, 1);
+		
 		size++;
+		array[size] = element;
+		if (size == 1) return;
+		bubbleUp(size);	
+	}
+	
+	private void bubbleUp(int index) {
+		bubbleUp(array[index], index);
+	}
+	
+	private void bubbleUp(double val, int index) {
+		double parent = array[index/2];
+		if (val > parent) {
+			array[index] = parent;
+			bubbleUp(val, index/2);
+		}
+		else {
+			array[index] = val;
+		}
 	}
 	
 	@Override
@@ -101,7 +119,6 @@ public class MaxBinHeap implements Heap_Interface {
 			sorted[i] = getMax();
 			delMax();
 		}
-		build(elements.clone());
 		return sorted;
 		
 	}

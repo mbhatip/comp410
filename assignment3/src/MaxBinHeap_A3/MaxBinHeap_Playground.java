@@ -10,6 +10,8 @@ public class MaxBinHeap_Playground {
     TestSort();
   }
 
+  
+  
   public static void testInsert() {
 	  MaxBinHeap mbh = new MaxBinHeap();
 	  double[] collection = new double[] { 3, 8, 2, 1, 7, 4, 6, 5 };
