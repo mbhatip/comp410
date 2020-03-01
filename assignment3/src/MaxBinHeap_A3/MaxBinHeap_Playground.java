@@ -3,14 +3,56 @@ package MaxBinHeap_A3;
 public class MaxBinHeap_Playground {
   public static void main(String[] args) {
     // Add more tests as methods and call them here!!
-	TestBuild();
+	  testNegative();
+	  System.out.println();
+	  testEverything();
+	  System.out.println();
+	  TestBuild();
     System.out.println();
     TestDelMin();
     System.out.println();
     TestSort();
+    System.out.println();
+    testRandBuild();
+  }
+  
+  public static void exit() {
+	  System.exit(0);
+  }
+  
+  public static void testNegative() {
+	  
   }
 
-  
+  public static void testEverything() {
+	  MaxBinHeap mbh = new MaxBinHeap();
+	  double collection[] = new double[] {3,8};
+	  printHeapCollection(collection);
+	  
+	  mbh.build(collection);
+	  printHeap(mbh.getHeap(), mbh.size());
+	  
+	  double toInsert[] = new double[] {1,6,4,5,7,2,10,0};
+	  for (double d : toInsert) {
+		  mbh.insert(d);
+	  }
+	  printHeap(mbh.getHeap(), mbh.size());
+	  
+	  mbh.delMax(); mbh.delMax(); mbh.delMax();
+	  printHeap(mbh.getHeap(), mbh.size());
+  }
+  public static void testRandBuild() {
+	  	// constructs a new maxbinheap, constructs an array of double,
+	    // passes it into build function. Then print collection and heap.
+	    MaxBinHeap mbh = new MaxBinHeap();
+	    double collection[] = new double[10];
+	    for (int i = 0; i < 10; i++) {
+	    	collection[i] = (int) (-10 + 10 * Math.random());
+	    }
+	    mbh.build(collection);
+	    printHeapCollection(collection);
+	    printHeap(mbh.getHeap(), mbh.size());
+  }
   
   public static void testInsert() {
 	  MaxBinHeap mbh = new MaxBinHeap();

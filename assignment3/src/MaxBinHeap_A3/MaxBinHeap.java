@@ -24,7 +24,6 @@ public class MaxBinHeap implements Heap_Interface {
 	@Override
 	public void insert(double element) {
 		// TODO Auto-generated method stub
-		
 		size++;
 		array[size] = element;
 		if (size == 1) return;
@@ -63,10 +62,10 @@ public class MaxBinHeap implements Heap_Interface {
 	private void bubbleDown(double val, int index) {
 		double left = array[index*2];
 		double right = array[index*2 + 1];
-		if (val > left && val > right) {
+		if ((val > left && val > right) || index * 2 > size) {
 			array[index] = val;
 		}
-		else if (left > right) {
+		else if (left > right || index * 2 + 1 > size) {
 			array[index] = left;
 			bubbleDown(val, index*2);
 		}
