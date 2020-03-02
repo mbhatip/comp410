@@ -1,5 +1,7 @@
 package MaxBinHeap_A3;
 
+import java.util.Arrays;
+
 public class MaxBinHeap_Playground {
   public static void main(String[] args) {
     // Add more tests as methods and call them here!!
@@ -13,7 +15,9 @@ public class MaxBinHeap_Playground {
     System.out.println();
     TestSort();
     System.out.println();
-    testRandBuild();
+    for (int i = 0; i < 1000; i++) {
+    testRandSortBuild();
+    }
   }
   
   public static void exit() {
@@ -41,17 +45,25 @@ public class MaxBinHeap_Playground {
 	  mbh.delMax(); mbh.delMax(); mbh.delMax();
 	  printHeap(mbh.getHeap(), mbh.size());
   }
-  public static void testRandBuild() {
+  public static void testRandSortBuild() {
 	  	// constructs a new maxbinheap, constructs an array of double,
 	    // passes it into build function. Then print collection and heap.
 	    MaxBinHeap mbh = new MaxBinHeap();
 	    double collection[] = new double[10];
 	    for (int i = 0; i < 10; i++) {
-	    	collection[i] = (int) (-10 + 10 * Math.random());
+	    	collection[i] = (int) (-5 + 10 * Math.random());
 	    }
 	    mbh.build(collection);
 	    printHeapCollection(collection);
 	    printHeap(mbh.getHeap(), mbh.size());
+	    double sorted[] = mbh.sort(collection);
+	    Arrays.sort(collection);
+	    printArray(sorted);
+	    printArray(collection);
+	    if (!Arrays.equals(sorted, collection)) {
+	    	System.out.println("Test Failed, exiting");
+	    	System.exit(0);
+	    }	    
   }
   
   public static void testInsert() {

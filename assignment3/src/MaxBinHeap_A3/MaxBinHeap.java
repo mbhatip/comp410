@@ -49,9 +49,8 @@ public class MaxBinHeap implements Heap_Interface {
 	public void delMax() {
 		// TODO Auto-generated method stub
 		if (size > 1) {
-			array[1] = 0;
 			bubbleDown(array[size], 1);
-			array[size] = 0;
+			
 			size--;
 		}
 		else {
@@ -62,7 +61,7 @@ public class MaxBinHeap implements Heap_Interface {
 	private void bubbleDown(double val, int index) {
 		double left = array[index*2];
 		double right = array[index*2 + 1];
-		if ((val > left && val > right) || index * 2 > size) {
+		if (index * 2 > size || (val > left && (val > right || index * 2 + 1 > size))) {
 			array[index] = val;
 		}
 		else if (left > right || index * 2 + 1 > size) {
@@ -113,7 +112,7 @@ public class MaxBinHeap implements Heap_Interface {
 	@Override
 	public double[] sort(double[] elements) {
 		build(elements.clone());
-		double sorted[] = elements.clone();
+		double sorted[] = new double[elements.length];
 		for (int i = sorted.length - 1; i >= 0; i--) {
 			sorted[i] = getMax();
 			delMax();
