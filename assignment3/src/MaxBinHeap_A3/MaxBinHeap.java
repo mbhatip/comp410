@@ -50,7 +50,6 @@ public class MaxBinHeap implements Heap_Interface {
 		// TODO Auto-generated method stub
 		if (size > 1) {
 			bubbleDown(array[size], 1);
-			
 			size--;
 		}
 		else {
