@@ -6,6 +6,11 @@ public class SkipList_Playground {
     test2();
   }
   
+  private void mytest() {
+	  SkipList_Interface list = new SkipList(100);
+	  
+  }
+  
   private static void test2() {
     SkipList_Interface list = new SkipList(5);
     System.out.println("=== INSERT ===");
