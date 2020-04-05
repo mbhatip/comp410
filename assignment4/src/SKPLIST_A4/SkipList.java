@@ -78,7 +78,6 @@ public class SkipList implements SkipList_Interface {
   //---------------------------------------------------------
     
   private final double LAMBDA = .0001;
-  private int _maxLevel;
   private int _size;
   private int _maxHeight;
   
@@ -97,7 +96,6 @@ public class SkipList implements SkipList_Interface {
   public boolean insert(double value) {	
 	int level = 0;
 	while(flip() && level < _maxHeight - 1) {level++;}
-	_maxLevel = level > _maxLevel ? level : _maxLevel;
 	
   	if(insert_recursive(level, new SkipList_Node(value, level+1), root)) {
   		_size++;
@@ -209,7 +207,6 @@ public class SkipList implements SkipList_Interface {
   public void clear() {
 	  root = new SkipList_Node(Double.NaN, _maxHeight);
 	  _size = 0;
-	  _maxLevel = 0;
   }
 
   @Override
@@ -219,7 +216,13 @@ public class SkipList implements SkipList_Interface {
 
   @Override
   public int level() {
-  	return _maxLevel;
+  	if (empty()) {return -1;}
+	  for (int i = _maxHeight - 1; i >= 0; i--) {
+  		if (root.getNext(i) != null) {
+  			return i;
+  		}
+  	}
+	  return -1;
   }
 
   @Override
