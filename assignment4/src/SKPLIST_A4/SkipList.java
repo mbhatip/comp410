@@ -77,25 +77,39 @@ public class SkipList implements SkipList_Interface {
   //---------------------------------------------------------
     
   private final double LAMBDA = .0001;
+  private int _maxLevel = 0;
+  
+  private SkipList_Node getLeftBound(int level, double value, SkipList_Node start) {
+	  SkipList_Node leftBound = start;
+	  SkipList_Node rightBound = start.getNext(level);
+	  while(rightBound != null && rightBound.getValue() < value)
+	  {
+		  leftBound = rightBound;
+		  rightBound = rightBound.getNext(level);
+	  }
+	  return leftBound;
+  }
   
   @Override
   public boolean insert(double value) {	
 	int level = 0;
 	while(flip() && level < _maxHeight) {level++;}
 
+	_maxLevel = level > _maxLevel ? level : _maxLevel;
+	
   	if(insert_recursive(level, new SkipList_Node(value, level), root)) {
   		_size++;
   		return true;
   	}
+  	else {
+  		return false;
+  	}
   }
   
-  private boolean insert_recursive(int level, SkipList_Node insertThis, SkipList_Node leftBound) {
+  private boolean insert_recursive(int level, SkipList_Node insertThis, SkipList_Node start) {
+	  SkipList_Node leftBound = getLeftBound(level, insertThis.getValue(), start);
 	  SkipList_Node rightBound = leftBound.getNext(level);
-	  while(rightBound != null && rightBound.getValue() < insertThis.getValue())
-	  {
-		  leftBound = rightBound;
-		  rightBound = rightBound.getNext(level);
-	  }
+	  
 	  if(rightBound != null && Math.abs(rightBound.getValue() - insertThis.getValue()) < LAMBDA) {
 		  return false;
 	  }
@@ -123,13 +137,10 @@ public class SkipList implements SkipList_Interface {
 	  return contains_recursive(level(), value, root);
   }
   
-  private boolean contains_recursive(int level, double value, SkipList_Node leftBound) {
+  private boolean contains_recursive(int level, double value, SkipList_Node start) {
+	  SkipList_Node leftBound = getLeftBound(level, value, start);
 	  SkipList_Node rightBound = leftBound.getNext(level);
-	  while(rightBound != null && rightBound.getValue() < value)
-	  {
-		  leftBound = rightBound;
-		  rightBound = rightBound.getNext(level);
-	  }
+	  
 	  if(rightBound != null && Math.abs(rightBound.getValue() - value) < LAMBDA) {
 		  return true;
 	  }
@@ -175,7 +186,7 @@ public class SkipList implements SkipList_Interface {
   @Override
   public int level() {
   	// TODO Auto-generated method stub
-  	return 0;
+  	return _maxLevel;
   }
 
   @Override
