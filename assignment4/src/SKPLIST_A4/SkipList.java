@@ -7,13 +7,14 @@ public class SkipList implements SkipList_Interface {
   private SkipList_Node root;
   private final Random rand;
   private double probability;
-  private int _maxHeight;
-  private int _size;
   private final int MAXHEIGHT = 30; // the most links that a data cell may contain
 
   public SkipList(int maxHeight) {
-	  _maxHeight = maxHeight > MAXHEIGHT ? MAXHEIGHT : maxHeight;
+	  root = new SkipList_Node(Double.NaN, _maxHeight);
 	  rand = new Random();
+	  probability = 0.5;
+	  
+	  _maxHeight = maxHeight > MAXHEIGHT ? MAXHEIGHT : maxHeight;
 	  clear();
   }
 
@@ -77,7 +78,9 @@ public class SkipList implements SkipList_Interface {
   //---------------------------------------------------------
     
   private final double LAMBDA = .0001;
-  private int _maxLevel = 0;
+  private int _maxLevel;
+  private int _size;
+  private int _maxHeight;
   
   private SkipList_Node getLeftBound(int level, double value, SkipList_Node start) {
 	  SkipList_Node leftBound = start;
@@ -93,11 +96,10 @@ public class SkipList implements SkipList_Interface {
   @Override
   public boolean insert(double value) {	
 	int level = 0;
-	while(flip() && level < _maxHeight) {level++;}
-
+	while(flip() && level < _maxHeight - 1) {level++;}
 	_maxLevel = level > _maxLevel ? level : _maxLevel;
 	
-  	if(insert_recursive(level, new SkipList_Node(value, level), root)) {
+  	if(insert_recursive(level, new SkipList_Node(value, level+1), root)) {
   		_size++;
   		return true;
   	}
@@ -128,6 +130,29 @@ public class SkipList implements SkipList_Interface {
   public boolean remove(double value) {
   	// TODO Auto-generated method stub
   	if (empty()) {return false;}
+  	if(remove_recursive(level(), value, root)) {
+  		_size--;
+  		return true;
+  	}
+  	else {
+  		return false;
+  	}
+  }
+  
+  private boolean remove_recursive(int level, double value, SkipList_Node start) {
+	  SkipList_Node leftBound = getLeftBound(level, value, start);
+	  SkipList_Node rightBound = leftBound.getNext(level);
+	  
+	  if(rightBound != null && Math.abs(rightBound.getValue() - value) < LAMBDA) {
+		  leftBound.setNext(level, rightBound.getNext(level));
+		  return level == 0 || remove_recursive(level-1, value, leftBound);
+	  }
+	  else if (level == 0) {
+		  return false;
+	  }
+	  else {
+		  return remove_recursive(level-1, value, leftBound);
+	  }
   }
 
   @Override
@@ -154,16 +179,25 @@ public class SkipList implements SkipList_Interface {
 
   @Override
   public double findMin() {
-  	// TODO Auto-generated method stub
 	  if (empty()) {return Double.NaN;}
-  	return 0;
+  	return root.getNext(0).getValue();
   }
 
   @Override
   public double findMax() {
-  	// TODO Auto-generated method stub
 	  if (empty()) {return Double.NaN;}
-  	return 0;
+  	SkipList_Node max = root;
+  	int level = level();
+  	
+  	while(level != 0 || max.getNext(level) != null) {
+  		if (max.getNext(level) == null) {
+  			level--;
+  		}
+  		else {
+  			max = max.getNext(level);
+  		}
+  	}
+	  return max.getValue();
   }
 
   @Override
@@ -175,7 +209,7 @@ public class SkipList implements SkipList_Interface {
   public void clear() {
 	  root = new SkipList_Node(Double.NaN, _maxHeight);
 	  _size = 0;
-	  probability = 0.5;
+	  _maxLevel = 0;
   }
 
   @Override
@@ -185,7 +219,6 @@ public class SkipList implements SkipList_Interface {
 
   @Override
   public int level() {
-  	// TODO Auto-generated method stub
   	return _maxLevel;
   }
 
