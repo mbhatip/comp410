@@ -22,6 +22,4 @@ public class SkipList_Node {
   // --------------------------------------------------------------------
   // you may add any other methods you want to get the job done
   // --------------------------------------------------------------------
-  
-  public int getLevel() { return level;}
 }
