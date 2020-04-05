@@ -7,11 +7,14 @@ public class SkipList implements SkipList_Interface {
   private SkipList_Node root;
   private final Random rand;
   private double probability;
+  private int _maxHeight;
+  private int _size;
   private final int MAXHEIGHT = 30; // the most links that a data cell may contain
 
   public SkipList(int maxHeight) {
-	  root = new SkipList_Node(Double.NaN, maxHeight);
-	clear();
+	  _maxHeight = maxHeight > MAXHEIGHT ? MAXHEIGHT : maxHeight;
+	  rand = new Random();
+	  clear();
   }
 
   @Override
@@ -72,55 +75,101 @@ public class SkipList implements SkipList_Interface {
   // student code follows
   // implement the methods of the interface
   //---------------------------------------------------------
-  
-  private int _size;
+    
+  private final double LAMBDA = .0001;
   
   @Override
-  public boolean insert(double value) {
-  	// TODO Auto-generated method stub
-  	return false;
+  public boolean insert(double value) {	
+	int level = 0;
+	while(flip() && level < _maxHeight) {level++;}
+
+  	if(insert_recursive(level, new SkipList_Node(value, level), root)) {
+  		_size++;
+  		return true;
+  	}
+  }
+  
+  private boolean insert_recursive(int level, SkipList_Node insertThis, SkipList_Node leftBound) {
+	  SkipList_Node rightBound = leftBound.getNext(level);
+	  while(rightBound != null && rightBound.getValue() < insertThis.getValue())
+	  {
+		  leftBound = rightBound;
+		  rightBound = rightBound.getNext(level);
+	  }
+	  if(rightBound != null && Math.abs(rightBound.getValue() - insertThis.getValue()) < LAMBDA) {
+		  return false;
+	  }
+	  
+	  if (level == 0 || insert_recursive(level-1, insertThis, leftBound)) {
+		  leftBound.setNext(level, insertThis);
+		  insertThis.setNext(level, rightBound);
+		  return true;
+	  }
+	  else {
+		  return false;		  
+	  }
   }
 
   @Override
   public boolean remove(double value) {
   	// TODO Auto-generated method stub
-  	return false;
+  	if (empty()) {return false;}
   }
 
   @Override
   public boolean contains(double value) {
   	// TODO Auto-generated method stub
-  	return false;
+	  if (empty()) {return false;}
+	  return contains_recursive(level(), value, root);
+  }
+  
+  private boolean contains_recursive(int level, double value, SkipList_Node leftBound) {
+	  SkipList_Node rightBound = leftBound.getNext(level);
+	  while(rightBound != null && rightBound.getValue() < value)
+	  {
+		  leftBound = rightBound;
+		  rightBound = rightBound.getNext(level);
+	  }
+	  if(rightBound != null && Math.abs(rightBound.getValue() - value) < LAMBDA) {
+		  return true;
+	  }
+	  else if (level == 0){
+		  return false;
+	  }
+	  else {
+		  return contains_recursive(level-1, value, leftBound);
+	  }
   }
 
   @Override
   public double findMin() {
   	// TODO Auto-generated method stub
+	  if (empty()) {return Double.NaN;}
   	return 0;
   }
 
   @Override
   public double findMax() {
   	// TODO Auto-generated method stub
+	  if (empty()) {return Double.NaN;}
   	return 0;
   }
 
   @Override
   public boolean empty() {
-  	// TODO Auto-generated method stub
-  	return false;
+  	return _size == 0;
   }
 
   @Override
   public void clear() {
-	  rand = new Random();
+	  root = new SkipList_Node(Double.NaN, _maxHeight);
+	  _size = 0;
 	  probability = 0.5;
   }
 
   @Override
   public int size() {
-  	// TODO Auto-generated method stub
-  	return 0;
+  	return _size;
   }
 
   @Override
@@ -131,8 +180,7 @@ public class SkipList implements SkipList_Interface {
 
   @Override
   public int max() {
-  	// TODO Auto-generated method stub
-  	return 0;
+  	return _maxHeight;
   }
 
 }
