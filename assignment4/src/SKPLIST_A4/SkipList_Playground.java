@@ -1,14 +1,38 @@
 package SKPLIST_A4;
 
+import java.util.Arrays;
+
 public class SkipList_Playground {
   public static void main(String[] args) {
-    test1();
-    test2();
+    mytest();
   }
   
-  private void mytest() {
+  private static void mytest() {
 	  SkipList_Interface list = new SkipList(100);
+	  if(list.max() != 30) {
+		  throw new RuntimeException("max function broken");
+	  }
 	  
+	  int numElem = 5000;
+	  double[] array = new double[numElem];
+	  for (int i=0; i < numElem;i++) {
+		  array[i] = Math.round(Math.random() * numElem);
+		  list.insert(array[i]);
+	  }
+	  Arrays.sort(array);
+	  if(list.findMax() != array[numElem-1]) {
+		  throw new RuntimeException("findmax function broken");
+	  }
+	  if(list.findMin() != array[0]) {
+		  throw new RuntimeException("findmin function broken");
+	  }
+	  for(double d : array) {
+		  if(!list.contains(d)) {
+			  throw new RuntimeException("contains function broken");
+		  }
+	  }
+	  System.out.println(list);
+	  System.out.println("success");
   }
   
   private static void test2() {
