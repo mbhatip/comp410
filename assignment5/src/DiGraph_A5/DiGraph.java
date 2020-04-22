@@ -3,9 +3,10 @@ package DiGraph_A5;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class DiGraph implements DiGraphInterface {
+public class DiGraph implements DiGraphInterface, Iterable<Node> {
 	private int _numEdges;
 	private int _numNodes;
 	private HashMap<Long,Node> _nodeIDs;
@@ -33,12 +34,13 @@ public class DiGraph implements DiGraphInterface {
 
 	@Override
 	public boolean addNode(long idNum, String label) {
-		Node idNode = _nodeIDs.get(idNum);
-		Node stringNode = _nodeNames.get(label); 
-		if (
-				idNum < 0 || label == null || 
-				exists(idNode) || exists(stringNode)
-		) {
+		if (label == null) {
+			return false;
+		}
+		
+		boolean notUniqueID = exists(_nodeIDs.get(idNum));
+		boolean notUniqueString = exists(_nodeNames.get(label)); 
+		if (idNum < 0 || notUniqueID || notUniqueString) {
 			return false;
 		}
 		
@@ -55,18 +57,17 @@ public class DiGraph implements DiGraphInterface {
 	public boolean addEdge(long idNum, String sLabel, String dLabel, long weight, String eLabel) {
 		Node source = _nodeNames.get(sLabel);
 		Node dest = _nodeNames.get(dLabel);
-		
-		if (
-				idNum < 0 || !exists(source) || !exists(dest) ||
-				exists(_edgeIDs.get(idNum)) || exists(source.getOut(dLabel))
-			) {
+		if (!exists(source) || !exists(dest)) {
 			return false;
 		}
-
+		
+		if (idNum < 0 || exists(_edgeIDs.get(idNum)) || exists(source.getEdge(dLabel))) {
+			return false;
+		}
+		
 		Edge newEdge = new Edge(idNum, sLabel, dLabel, weight, eLabel);
 		_edgeIDs.put(idNum, newEdge);
-		source.addOut(dLabel, newEdge);
-		source.addIn(sLabel, newEdge);
+		source.addDest(dLabel, newEdge);
 		_numEdges++;
 		return true;
 	}
@@ -86,7 +87,9 @@ public class DiGraph implements DiGraphInterface {
 	@Override
 	public boolean delNode(String label) {
 		Node deleteThis = _nodeNames.get(label);
-		if (deleteThis == null) { return false; }
+		if (!exists(deleteThis)){
+			return false;
+		}
 		
 		deleteThis.delete();
 		_numNodes--;
@@ -100,7 +103,7 @@ public class DiGraph implements DiGraphInterface {
 		if (!exists(source) || !exists(dest)) {
 			return false;
 		}
-		Edge e = source.getOut(dLabel);
+		Edge e = source.getEdge(dLabel);
 		if (!exists(e)) { return false; }
 		e.delete();
 		_numEdges--;
@@ -123,7 +126,10 @@ public class DiGraph implements DiGraphInterface {
 				continue;
 			}
 			System.out.println("(" + n.id + ")" + n.name);
-			for (Edge e : n.getIn()) {
+			for (Edge e : n.getEdges()) {
+				if (!exists(e)) {
+					continue;
+				}
 				String name = e.name == null ? "" : e.name;
 				System.out.print("  (" + e.id + ")--");
 				System.out.print(name + "," + e.weight);
@@ -131,6 +137,11 @@ public class DiGraph implements DiGraphInterface {
 			}
 			System.out.println();
 		}
+	}
+
+	@Override
+	public Iterator<Node> iterator() {
+		return _inorder.iterator();
 	}
 }
 
@@ -163,40 +174,27 @@ class Edge extends Existence{
 }
 
 class Node extends Existence{
-	private HashMap<String,Edge> _in;
-	private HashMap<String,Edge> _out;
+	private HashMap<String,Edge> _dest;
 	
 	public Node(long idNum, String label) {
 		super(idNum, label);
-		_in = new HashMap<String,Edge>();
-		_out = new HashMap<String,Edge>();
+		_dest = new HashMap<String,Edge>();
 	}
 	
-	public void addIn(String source, Edge e) {
-		_in.put(source, e);
+	public void addDest(String dest, Edge e) {
+		_dest.put(dest, e);
 	}
 	
-	public void addOut(String dest, Edge e) {
-		_out.put(dest, e);
+	public Edge getEdge(String dest) {
+		return _dest.get(dest);
 	}
 	
-	public Edge getIn(String source) {
-		return _in.get(source);
-	}
-	
-	public Collection<Edge> getIn() {
-		return _in.values();
-	}
-	
-	public Edge getOut(String dest) {
-		return _out.get(dest);
+	public Collection<Edge> getEdges() {
+		return _dest.values();
 	}
 	
 	public void delete() {
-		for (Edge e : _in.values()) {
-			e.delete();
-		}
-		for (Edge e : _out.values()) {
+		for (Edge e : getEdges()) {
 			e.delete();
 		}
 		super.delete();
