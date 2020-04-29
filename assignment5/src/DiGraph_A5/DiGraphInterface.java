@@ -1,15 +1,17 @@
 package DiGraph_A5;
+
 /**
  * COMP 410
  *
  * Make your class and its methods public!
  * Don't modify this file!
+ *
  * Begin by creating a class that implements this interface.
  *
 */
 
 public interface DiGraphInterface {
-  /*
+ /*
     Interface: A DIGRAPH will provide this collection of operations:
 
     addNode
@@ -55,6 +57,13 @@ public interface DiGraphInterface {
       in: nothing
       return: integer 0 or greater
                 reports how many edges are in the graph
+                  
+    shortestPath:
+      in: string label for start vertex
+      return: array of ShortestPathInfo objects (ShortestPathInfo)
+              length of this array should be numNodes (as you will put in all shortest 
+              paths including from source to itself)
+              See ShortestPathInfo class for what each field of this object should contain
   */
 
   // ADT operations
@@ -65,4 +74,5 @@ public interface DiGraphInterface {
   boolean delEdge(String sLabel, String dLabel);
   long numNodes();
   long numEdges();
+  ShortestPathInfo[] shortestPath(String label);
 }

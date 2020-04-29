@@ -5,8 +5,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 
-public class DiGraph implements DiGraphInterface, Iterable<Node> {
+public class DiGraph implements DiGraphInterface {
 	private int _numEdges;
 	private int _numNodes;
 	private HashMap<Long,Node> _nodeIDs;
@@ -140,8 +141,48 @@ public class DiGraph implements DiGraphInterface, Iterable<Node> {
 	}
 
 	@Override
-	public Iterator<Node> iterator() {
-		return _inorder.iterator();
+	public ShortestPathInfo[] shortestPath(String label) {
+		Node source = _nodeNames.get(label);
+		if (!exists(source)) { return null; }
+		source.dist = 0;
+		
+		ShortestPathInfo paths[] = new ShortestPathInfo[_numNodes];
+		int index = 0;
+		
+		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+		queue.add(source);
+		
+		while(!queue.isEmpty()) {
+			Node next = queue.poll();
+			if (next.picked) { continue; }
+			next.pick();
+			paths[index++] = new ShortestPathInfo(next.name, next.dist);
+			
+			for (Edge e : next.getEdges()) {
+				
+				if (!exists(e)) { continue; }
+				
+				Node dest = _nodeNames.get(e.dest);
+				if (!exists(dest) || dest.picked) { continue; }
+				
+				long newDist = next.dist + e.weight;
+				
+				if (newDist < dest.dist) {
+					dest.dist = newDist;
+				}
+				queue.add(dest);
+			}
+		}
+		
+		for (Node next : _inorder) {
+			if (!next.picked) {
+				paths[index++] = new ShortestPathInfo(next.name, -1);
+			}
+			next.picked = false;
+			next.dist = Long.MAX_VALUE;
+		}
+		
+		return paths;
 	}
 }
 
@@ -173,12 +214,16 @@ class Edge extends Existence{
 	}
 }
 
-class Node extends Existence{
+class Node extends Existence implements Comparable<Node>{
 	private HashMap<String,Edge> _dest;
+	protected long dist;
+	protected boolean picked;
 	
 	public Node(long idNum, String label) {
 		super(idNum, label);
 		_dest = new HashMap<String,Edge>();
+		dist = Long.MAX_VALUE;
+		picked = false;
 	}
 	
 	public void addDest(String dest, Edge e) {
@@ -198,6 +243,22 @@ class Node extends Existence{
 			e.delete();
 		}
 		super.delete();
+	}
+	
+	public void pick() {
+		picked = true;
+	}
+
+	@Override
+	public int compareTo(Node other) {
+		// TODO Auto-generated method stub
+		if (this.dist > other.dist) {
+			return 1;
+		}
+		else if (this.dist < other.dist) {
+			return -1;
+		}
+		return 0;
 	}
 }
 
